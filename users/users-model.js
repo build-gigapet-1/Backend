@@ -9,7 +9,7 @@ module.exports = {
 };
 
 function find() {
-  return db("users").select("userId", "username", "password");
+  return db("users").select("userId", "username", "password", "phone");
 }
 
 function findBy(filter) {
@@ -17,11 +17,11 @@ function findBy(filter) {
 }
 
 async function add(user) {
-  const [id] = await db("users").insert(user);
-  return findById(id);
+  const [userId] = await db("users").insert(user);
+  return findById(userId);
 }
 
-function findById(id) {
+function findById(userId) {
   return db("users")
     .where({ userId })
     .first();

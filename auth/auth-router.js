@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
-const signToken = require("../token/token.js");
-const Users = require("../users/users-model.js");
+const signToken = require("../token/token");
+const Users = require("../users/users-model");
 
 router.post("/register", (req, res) => {
   let user = req.body;
@@ -15,6 +15,7 @@ router.post("/register", (req, res) => {
     })
     .catch(error => {
       res.status(500).json(error);
+      console.log(error, "oops")
     });
 });
 
