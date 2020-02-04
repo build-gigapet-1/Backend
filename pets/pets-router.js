@@ -31,14 +31,29 @@ router.get('/:petId',
     Pets.findById(petId)
     .then(pet => {
       if (!pet) {
-        res.status(404).json({ message: "pet with requested id is not found in database" });
+        res.status(404).json({ message: "pet with requested petId is not found in database" });
       }
       res.status(200).json(pet);
     })
     .catch(err => {
       res.status(500).json({
-        message: `Error getting pet from the database by id.`,
+        message: `Error getting pet from the database by petId.`,
         error: err.toString()
       })
     });
 });
+
+router.delete('/:petId', (req, res) => {
+    const { petId } = req.params;
+
+    Events.remove(petId)
+      .then(
+        res.status(200).json({ message: `Event with petId ${petId} deleted.`})
+      )
+      .catch(err => {
+        res.status(500).json({
+          message: `Error getting event from the database.`,
+          error: err.toString()
+        })
+      });
+})
