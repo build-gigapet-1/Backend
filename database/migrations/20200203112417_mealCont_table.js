@@ -1,6 +1,7 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('mealContents', mealContents => {
+        mealContents.increments('mCId')
 
     mealContents
         .integer('mealId')
