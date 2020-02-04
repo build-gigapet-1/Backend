@@ -13,7 +13,7 @@ exports.up = function(knex) {
         .onDelete('CASCADE')
         .onUpdate('CASCADE');
 
-    pets.string('petName', 255).notNullable().unique();
+    pets.string('petName', 255).notNullable();
     pets.integer('petScore', 2).notNullable();
     pets.string('petImgSet', 255).notNullable();
 
