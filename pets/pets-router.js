@@ -70,7 +70,7 @@ router.post('/', restrictAuth, (req, res) => {
       userId: req.decodedJwt.userId
       
   }
-  Pets.addPet()
+  Pets.addPet(payload)
   .then(pet => {
       res.status(201).json(pet)
   })
