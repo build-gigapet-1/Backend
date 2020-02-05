@@ -13,7 +13,9 @@ server.use(cors());
 server.use(express.json());
 
 server.use('/api/auth', authRouter);
-server.use('/api/auth/pets', petsRouter);
+server.use('/api/pets', petsRouter);
 
-
+server.get('/', (req, res) => {
+    res.json({ api: 'running' })
+})
 module.exports = server;

@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
   // console.log("request headers in auth middleware", req.headers)
 
   if (token) {
-    const secret = process.env.JWT_SECRET || "is it secret, is it safe?";
+    const secret = process.env.JWT_SECRET || "Pudding!";
 
     // check that the token is valid
     jwt.verify(token, secret, (err, decodedToken) => {
@@ -15,6 +15,8 @@ module.exports = (req, res, next) => {
         res.status(401).json({ message: "Invalid Credentials" });
       } else {
         req.decodedJwt = decodedToken;
+       // console.log(decodedToken, "decoded token");
+       
         next();
       }
     });
