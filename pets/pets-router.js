@@ -1,14 +1,14 @@
 const router = require("express").Router();
 const restrictAuth = require("../restrictAuthMiddleware")
-const { signToken } = require('../token/token')
-const jwt = require('jsonwebtoken')
 const db = require("../database/dbConfig")
+const Pets = require("./pets-model")
 
 router.get('/', restrictAuth, (req, res) => {
 
-  db('pets').orderBy('petId')
+  Pets.findAllPets(req.decodedJwt.userId)
   .then(pets => {
       res.status(201).json(pets)
+    
   })
   .catch(err => {
     console.log(err)
@@ -26,8 +26,7 @@ router.get('/:petId', restrictAuth, (req,res) => {
     petImgSet: '',
     meals: []
   }
-db("pets").where("petId", req.params.petId)
-.first()
+  Pets.findPetById(req.params.petId)
   .then(pet => {
     //console.log(pet);
     payload.petId = pet.petId
@@ -40,10 +39,7 @@ db("pets").where("petId", req.params.petId)
     res.status(500).json({ Error: "can't get pet"})
   })
 
-db("meals")
-  .join("pets", "meals.petId", "pets.petId")
-  .where("meals.petId", req.params.petId)
-  .select("meals.*")
+  Pets.findPetMealById(req.params.petId)
   .then(meal => {
     payload.meals = meal
     res.status(200).json(payload)
@@ -56,28 +52,10 @@ db("meals")
 
 router.get('/:petId/meals/:mealId', restrictAuth, (req,res) => {
 
-  const payload = {
-    mealId: 0,
-    mealType: '',
-    fruitVeg: '',
-    protein: '',
-    grains: '',
-    sweets: '',
-    mealScore: ''
-  }
-db("meals").where("mealId", req.params.mealId)
-.first()
+  Pets.findPetMealById(req.params.mealId).first()
   .then(meal => {
-    //console.log(meal);
-    payload.mealId = meal.mealId
-    payload.mealType = meal.mealType
-    payload.fruitVeg = meal.fruitVeg
-    payload.protein = meal.protein
-    payload.grains = meal.grains
-    payload.sweets = meal.sweets
-    payload.mealScore = meal.mealScore
 
-    res.status(200).json(payload)
+    res.status(200).json(meal)
 
   })
   .catch(err => {
@@ -92,7 +70,7 @@ router.post('/', restrictAuth, (req, res) => {
       userId: req.decodedJwt.userId
       
   }
-  db('pets').insert(payload)
+  Pets.addPet()
   .then(pet => {
       res.status(201).json(pet)
   })
@@ -105,24 +83,26 @@ router.post('/', restrictAuth, (req, res) => {
 router.post('/:petId/meals', restrictAuth, (req, res) => {
   const payload = {
       ...req.body,
-      petId: req.params.petId,
-     
-     
+      petId: req.params.petId
   }
-  db('meals').insert(payload)
-  .then(pet => {
-      res.status(201).json(pet)
+
+  Pets.addMeal(payload)
+  .then(meal => {
+      res.status(201).json(meal)
   })
   .catch(err => {
       console.log(err)
       res.status(500).json({message: 'fail'})
   })
 })
+
+
 router.put('/:petId/meals/:mealId', restrictAuth, (req, res) => {
-    
-  db('meals').update(req.body).where('mealId', req.params.mealId)
-  .then(post => {
-      res.status(201).json(post)
+  const body = req.body
+  const mealId = req.params.mealId
+Pets.updateMeal(body, mealId)
+  .then(meal => {
+      res.status(201).json(meal)
   })
   .catch(err => {
       console.log(err)
@@ -131,7 +111,8 @@ router.put('/:petId/meals/:mealId', restrictAuth, (req, res) => {
 })
 
 router.delete("/:petId", restrictAuth, (req,res) => {
-  db('pets').where('petId', req.params.petId).del()
+  const petId = req.params.petId
+    Pets.deletePet(petId)
       .then(deleted => res.status(200).json(deleted))
       .catch(err => {
           console.log(err)
@@ -141,7 +122,8 @@ router.delete("/:petId", restrictAuth, (req,res) => {
 
 
 router.delete("/:petId/meals/:mealId", restrictAuth, (req,res) => {
-  db("meals").where("mealId", req.params.mealId).del()
+  const mealId = req.params.mealId
+  Pets.deleteMeal(mealId)
   .then(deleted => res.status(200).json(deleted))
   .catch(err => {
       console.log(err)
