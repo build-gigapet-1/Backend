@@ -7,7 +7,7 @@ router.get('/', restrictAuth, (req, res) => {
 
   Pets.findAllPets(req.decodedJwt.userId)
   .then(pets => {
-      res.status(201).json(pets)
+      res.status(200).json(pets)
     
   })
   .catch(err => {
@@ -102,7 +102,7 @@ router.put('/:petId/meals/:mealId', restrictAuth, (req, res) => {
   const mealId = req.params.mealId
 Pets.updateMeal(body, mealId)
   .then(meal => {
-      res.status(201).json(meal)
+      res.status(200).json(meal)
   })
   .catch(err => {
       console.log(err)
