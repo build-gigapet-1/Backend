@@ -101,8 +101,8 @@ router.put('/:petId/', restrictAuth, (req, res) => {
   const body = req.body
   const petId = req.params.petId
 Pets.updatePet(body, petId)
-  .then(meal => {
-      res.status(200).json(meal)
+  .then(pet => {
+      res.status(200).json(pet)
   })
   .catch(err => {
       console.log(err)
