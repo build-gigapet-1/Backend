@@ -65,7 +65,7 @@ describe('test get to /pets', function () {
             .send({
                 "petName": "Bob",
                 "petScore": "8",
-                "petImgSet": "shark",
+                "petImgSet": "shark"
                  })
             .then(res => {
                 expect(res.status).toBe(201);
@@ -117,7 +117,19 @@ describe(" /api/pets/:petId/meals", () => {
                 expect(res.status).toBe(200)
             })
     })
-    it("puts", () => {
+    it("pet put", () => {
+        return request(server).put("/api/pets/1")
+            .set("authorization", token)
+            .send({
+                "petName": "Bob",
+                "petScore": "5",
+                "petImgSet": "shark"
+            })
+            .then(res => {
+                expect(res.status).toBe(200)
+            })
+    })
+    it("meal put", () => {
         return request(server).put("/api/pets/1/meals/1")
             .set("authorization", token)
             .send({

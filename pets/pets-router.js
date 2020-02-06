@@ -70,6 +70,7 @@ router.post('/', restrictAuth, (req, res) => {
       userId: req.decodedJwt.userId
       
   }
+
   Pets.addPet(payload)
   .then(pet => {
       res.status(201).json(pet)
@@ -96,6 +97,18 @@ router.post('/:petId/meals', restrictAuth, (req, res) => {
   })
 })
 
+router.put('/:petId/', restrictAuth, (req, res) => {
+  const body = req.body
+  const petId = req.params.petId
+Pets.updatePet(body, petId)
+  .then(meal => {
+      res.status(200).json(meal)
+  })
+  .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'fail'})
+  })
+})
 
 router.put('/:petId/meals/:mealId', restrictAuth, (req, res) => {
   const body = req.body

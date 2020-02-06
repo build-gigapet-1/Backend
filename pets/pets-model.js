@@ -9,6 +9,7 @@ findPetMealById,
 findMealById,
 addPet,
 addMeal,
+updatePet,
 updateMeal,
 deletePet,
 deleteMeal
@@ -45,6 +46,12 @@ function addPet(payload) {
 
 function addMeal(payload) {
   return db('meals').insert(payload)
+}
+
+function updatePet(body, petId) {
+  
+  return  db('pets').update(body)
+  .where('petId', petId)
 }
 
 function updateMeal(body, mealId) {
